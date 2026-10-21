@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Katalog Buku - SiPinjol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header sticky-top">
+    <nav class="navbar navbar-expand-lg" aria-label="Navigasi utama">
+      <div class="container">
+        <a class="navbar-brand brand m-0" href="index.html">
+          <span class="brand-logo"><i class="bi bi-send-fill" aria-hidden="true"></i></span>
+          <span class="brand-teks"><strong>SiPinjol</strong><small>Perpustakaan ITS</small></span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuUtama" aria-controls="menuUtama" aria-expanded="false" aria-label="Buka menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menuUtama">
+          <ul class="navbar-nav mx-lg-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="katalog.html">Katalog</a></li>
+            <li class="nav-item"><a class="nav-link" href="pinjam.html">Peminjaman</a></li>
+          </ul>
+          <div class="d-flex align-items-center gap-2 py-2 py-lg-0">
+            <form class="cari-header flex-grow-1" id="formCariHeader" action="katalog.html" method="get" role="search">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <input class="form-control" id="cariHeader" type="search" name="q" placeholder="Cari buku, penulis..." aria-label="Cari buku atau penulis">
+            </form>
+            <button class="btn-akun" type="button" aria-label="Akun"><i class="bi bi-person" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Banner -->
+    <section class="banner">
+      <div class="container">
+        <div class="isi">
+          <i class="bi bi-book" aria-hidden="true"></i>
+          <div>
+            <h1>Katalog Buku</h1>
+            <p>Temukan buku favoritmu, jelajahi koleksi kami, dan ketahui status ketersediaannya dengan mudah.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container mt-4">
+      <div class="row g-4">
+        <!-- Filter -->
+        <aside class="col-lg-3" aria-label="Filter buku">
+          <div class="panel-filter">
+            <h2><i class="bi bi-search" aria-hidden="true"></i><label for="cariBuku">Cari Buku</label></h2>
+            <input class="form-control" id="cariBuku" type="search" placeholder="Judul atau penulis...">
+
+            <h2><i class="bi bi-tag" aria-hidden="true"></i><label for="filterKategori">Kategori</label></h2>
+            <select class="form-select" id="filterKategori">
+              <option value="">Semua Kategori</option>
+            </select>
+
+            <h2><i class="bi bi-funnel" aria-hidden="true"></i>Status</h2>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="statusTersedia" checked>
+              <label class="form-check-label" for="statusTersedia">Tersedia</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="statusDipinjam" checked>
+              <label class="form-check-label" for="statusDipinjam">Dipinjam</label>
+            </div>
+
+            <hr>
+            <button class="btn btn-garis w-100" type="button" id="btnResetFilter"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Reset Filter</button>
+          </div>
+        </aside>
+
+        <!-- Hasil -->
+        <section class="col-lg-9" aria-label="Hasil pencarian">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3" id="atasHasil">
+            <h2 class="h6 fw-bold m-0" id="jumlahHasil" aria-live="polite">Hasil Pencarian</h2>
+            <div class="d-flex align-items-center gap-2">
+              <label class="small text-secondary" for="urutkan">Urutkan:</label>
+              <select class="form-select form-select-sm w-auto" id="urutkan">
+                <option value="terbaru">Terbaru</option>
+                <option value="judul">Judul A-Z</option>
+                <option value="penulis">Penulis A-Z</option>
+                <option value="stok">Stok terbanyak</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row row-cols-2 row-cols-md-3 row-cols-xl-4 g-3" id="daftarBuku"></div>
+          <nav aria-label="Halaman katalog"><div class="paginasi" id="paginasi"></div></nav>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal detail buku -->
+  <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="judulModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5 fw-bold" id="judulModal">Detail Buku</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body pt-0">
+          <div class="row g-3">
+            <div class="col-sm-4" id="modalCover"></div>
+            <div class="col-sm-8">
+              <h3 class="h5 fw-bold mb-0" id="modalJudul"></h3>
+              <p class="text-secondary mb-2" id="modalPenulis"></p>
+              <div class="d-flex flex-wrap gap-1" id="modalChip"></div>
+              <dl class="detail-meta">
+                <dt>Penerbit</dt><dd id="modalPenerbit"></dd>
+                <dt>Tahun terbit</dt><dd id="modalTahun"></dd>
+                <dt>Stok</dt><dd id="modalStok"></dd>
+              </dl>
+            </div>
+          </div>
+          <hr>
+          <h4 class="h6 fw-bold">Sinopsis</h4>
+          <p class="mb-0" id="modalSinopsis"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-garis" data-bs-dismiss="modal">Tutup</button>
+          <a class="btn btn-biru" id="modalPinjam" href="pinjam.html">Pinjam</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4 kolom">
+          <h2>Perpustakaan ITS</h2>
+          <p>Jl. Teknik Kimia, ITS, Surabaya</p>
+          <p>Membaca hari ini, membangun masa depan.</p>
+        </div>
+        <div class="col-md-4 kolom">
+          <h2>Kontak</h2>
+          <ul>
+            <li><i class="bi bi-telephone" aria-hidden="true"></i>(031) 5994251</li>
+            <li><i class="bi bi-envelope" aria-hidden="true"></i>perpustakaan@its.ac.id</li>
+            <li><i class="bi bi-geo-alt" aria-hidden="true"></i>Jl. Teknik Kimia, ITS, Surabaya</li>
+          </ul>
+        </div>
+        <div class="col-md-4 kolom">
+          <h2>Jam Layanan</h2>
+          <dl class="jam">
+            <dt>Senin - Jumat</dt><dd>08.00 - 16.00</dd>
+            <dt>Sabtu</dt><dd>08.00 - 12.00</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/katalog.js"></script>
+</body>
+</html>
